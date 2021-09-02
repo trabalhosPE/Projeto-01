@@ -1,0 +1,31 @@
+PRÁT. PROF. II - LINGUAGEM DE PROGRAMAÇÃO ESTRUTURADA - GPE01N0147
+Descrição do Projeto 01:
+
+Utilizando os conceitos de vetor e função (está proibido o uso de struct, ponteiros, alocação dinâmica...), implemente um algoritmo que:
+
+1 - inclua um usuário por vez, limitado a 1000 usuários;
+2 - edite um usuário;
+3 - exclua um usuário;
+4 - busque um usuário pelo id (pesquisa binária);
+5 - busque um usuário pelo email;
+6 - imprima todos os usuários cadastrados;
+7 - faça backup dos usuários cadastrados;
+8 - faça restauração dos dados;
+9 - Dados do usuário:
+
+Id (int) => preenchido automaticamente por números randômicos
+Nome completo (string)
+Email (string) => validação do campo: verificar se o caractere "@" aparece
+Sexo (string) => validação do campo: aceitar somente as palavras Feminino, Masculino e Não declarar
+Endereço (string)
+Altura (double) => validação do campo: aceitar valores entre 1 e 2 m. 
+Vacina (tomou a vacina? boolean)
+Apresentação: 27 de setembro
+
+Duas equipes serão sorteadas para realizar a apresentação do projeto, tendo 15 min para cada apresentação.
+Entrega:  28 de setembro
+
+apenas um integrante da dupla deve postar o arquivo no formato .c ou .cpp
+o nome completo dos integrantes da dupla deve constar na primeira linha do arquivo, como comentário, e no fórum.
+no fórum também deverá ser postado o link do repositório do projeto no GitHub (uso obrigatório)
+a postagem final do projeto deverá ser feita até 28/09 (vocês poderão realizar correções após a apresentação dos projetos)
