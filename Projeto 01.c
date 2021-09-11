@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 #define MAX 1000     //MAX é número máximo de usuários que serão cadastrados.
 #define MAX_C 50 + 2 //MAX_C é número máximo de caracteres que cada variável char pode ler.
@@ -14,7 +15,8 @@ void verificaNome(char nome_completo[MAX][MAX_C], int posicao); //Função que v
 void verificaEmail(char email[MAX][MAX_C], int posicao);        //Função que verifica se o email é valido.
 void verificaGenero(char genero[MAX][MAX_C], int posicao);      //Função que verifica se o gênero é válido.
 void verificaAltura(double *altura, int posicao);               //Função que verifica se a altura é válida.
-
+void verificaVacina(bool *vacina, int posicao);                 //Função que verifica se o usuário é vacinado.
+void verificaLogin(char *login);                                //Função que verifica se o login é válido.
 int main()
 {
     setlocale(LC_ALL, "Portuguese"); //Função que habilita a formatação em Português para todos os printfs.
@@ -27,34 +29,30 @@ int main()
     char nome_completo[MAX][MAX_C];
     char email[MAX][MAX_C];
     char genero[MAX][MAX_C];
-    char endereco[MAX][MAX_C * 2];
+    char endereco[MAX][MAX_C];
     double altura[MAX];
     bool vacina[MAX];
+
+    printf("Olá, seja bem-vindo ao cadastro online da Universidade Católica de Brasília.\n"); // START DO PROGRAMA
+    printf("Digite seu primeiro e ultimo nome para iniciar: ");
+    fgets(login, MAX_C, stdin); //Lê o login
+    verificaLogin(login);
+
     do
     {
-        /*printf("Olá, seja bem vindo ao cadastro online da católica."); // START DO PROGRAMA
-        do
-        {
-            printf("\nDigite seu primeiro e ultimo nome para iniciar: "); // Validação do tamanho de nome
-            fgets(login, 35, stdin);
-            if (strlen(login) <= 5)
-            {
-                printf("Insira um nome válido! ");
-            }
-        } while (strlen(login) <= 5);
-*/
         system("cls"); // MENU INICIAL
         printf("-----------------\n");
-        printf("CADASTROS ONLINE \n\n");
-        printf("1.CADASTRO\n\n");
-        printf("2.EDITAR CADASTRO\n\n");
-        printf("3.EXCLUIR CADASTRO\n\n");
-        printf("4.PROCURAR CADASTRO VIA ID\n\n");
-        printf("5.PROCURAR CADASTRO VIA E-MAIL\n\n");
-        printf("6.LISTA DE CADASTROS\n\n");
-        printf("7.BACKUP DE CADASTROS\n\n");
-        printf("8.RESTAURAÇÃO(backup necessário)\n\n");
-        printf("9.SAIR\n\n");
+        printf("MENU:\n");
+        printf("1 - CADASTRO\n");
+        printf("2 - EDITAR CADASTRO\n");
+        printf("3 - EXCLUIR CADASTRO\n");
+        printf("4 - PROCURAR CADASTRO VIA ID\n");
+        printf("5 - PROCURAR CADASTRO VIA E-MAIL\n");
+        printf("6 - LISTA DE CADASTROS\n");
+        printf("7 - BACKUP DE CADASTROS\n");
+        printf("8 - RESTAURAÇÃO (Backup necessário)\n");
+        printf("9 - SAIR\n");
+        printf("Escolha: ");
         scanf("%d", &menu);
         system("cls");
         getchar();
@@ -62,36 +60,94 @@ int main()
         switch (menu)
         { // caso 1 : cadastros
         case 1:
-
-            preencheId(id, usuario);
-
-            printf("Informe o seu nome completo: ");
-            fgets(nome_completo[usuario], MAX_C, stdin);
-            verificaNome(nome_completo, usuario);
-
-            printf("Informe o seu email: ");
-            fgets(email[usuario], MAX_C, stdin);
-            verificaEmail(email, usuario);
-            //
-            printf("Informe o seu gênero (Feminino, Masculino ou Não Declarar): ");
-            fgets(genero[usuario], MAX_C, stdin);
-            verificaGenero(genero, usuario);
-
-            printf("Informe o seu endereço: ");
-            fgets(endereco[usuario], MAX_C, stdin);
-
-            printf("Informe a sua altura: ");
-            scanf("%lf", &altura[usuario]);
-            verificaAltura(altura, usuario);
-
-            usuario++;
-            //fazer a verificação do usuario menor que 1000.
+            if (usuario < MAX) //Se ainda houver vagas para novos usuários...
+            {
+                //ID
+                preencheId(id, usuario);
+                //Nome completo
+                printf("Informe o seu nome completo: ");
+                fgets(nome_completo[usuario], MAX_C, stdin);
+                verificaNome(nome_completo, usuario);
+                //Email
+                printf("Informe o seu email: ");
+                fgets(email[usuario], MAX_C, stdin);
+                verificaEmail(email, usuario);
+                //Gênero
+                printf("Informe o seu gênero. Escreva \"Feminino\", \"Masculino\" ou \"Não Declarar\": ");
+                fgets(genero[usuario], MAX_C, stdin);
+                verificaGenero(genero, usuario);
+                //Endereço
+                printf("Informe o seu endereço: ");
+                fgets(endereco[usuario], MAX_C, stdin);
+                //Altura
+                printf("Informe a sua altura: ");
+                scanf("%lf", &altura[usuario]);
+                verificaAltura(altura, usuario);
+                //Vacina
+                printf("Você se vacinou? Escreva \"Sim\" ou \"Não\": ");
+                verificaVacina(vacina, usuario);
+                //Próximo usuário
+                usuario++;
+            }
+            else
+            {
+                system("cls");
+                printf("A capacidade máxima de usuários cadastrados já foi atingida.\n");
+                system("pause");
+            }
+            break;
+        case 2:
+            //fazer
+            break;
+        case 3:
+            //fazer
+            break;
+        case 4:
+            //fazer
+            break;
+        case 5:
+            //fazer
+            break;
+        case 6:
+            //fazer
+            break;
+        case 7:
+            //fazer
+            break;
+        case 8:
+            //fazer
+            break;
         }
     } while (menu != 9);
 }
+
+//Funções:
+
+void verificaVacina(bool *vacina, int posicao)
+{
+    getchar();
+    char aux[4 + 2];
+    fgets(aux, 4 + 2, stdin); //Lê uma string com sim ou não
+    for (int i = 0; i < strlen(aux); i++)
+        aux[i] = tolower(aux[i]); //Deixa todas as letras em minúsculo
+    if (strcmp(aux, "sim\n") == 0)
+        vacina[posicao] = true; //Se sim a vacina é true
+    else if (strcmp(aux, "não\n") == 0 || strcmp(aux, "nÃo\n") == 0)
+        vacina[posicao] = false; //Se não a vacina é false
+    else
+    {
+        if (strchr(aux, '\n') == NULL) //Por causa da forma como o fgets lê e da necessidade da função eu coloquei um "eliminador" de \n
+            while (getchar() != '\n')
+                ;
+        system("cls");
+        printf("Você deve escrever apenas \"Sim\" ou \"Não\".\n");
+        printf("Você se vacinou? ");
+        verificaVacina(vacina, posicao); //A função chama a si mesma (recursividade)
+    }
+}
 void verificaAltura(double *altura, int posicao)
 {
-    if (altura[posicao] < 1 || altura[posicao] > 2)
+    if (altura[posicao] < 1 || altura[posicao] > 2) //Se for menor que 1 ou maior que 2, lê de novo
     {
         do
         {
@@ -107,12 +163,35 @@ void verificaAltura(double *altura, int posicao)
 }
 void verificaGenero(char genero[MAX][MAX_C], int posicao)
 {
-    //resolver
-    printf("\nGenero invalido.");
+    for (int i = 0; i < strlen(genero[posicao]); i++)
+        genero[posicao][i] = tolower(genero[posicao][i]); //Deixa a string em minúsculo
+    if (strcmp(genero[posicao], "masculino\n") == 0)      //Se for masculino...
+    {
+        strcpy(genero[posicao], "Masculino.\n"); //Substitui a string pro "Masculino.\n"
+        printf("Gênero cadastrado com sucesso!\n");
+    }
+    else if (strcmp(genero[posicao], "feminino\n") == 0) //Se for feminino...
+    {
+        strcpy(genero[posicao], "Feminino.\n"); //Substitui a string pro "Feminino.\n"
+        printf("Gênero cadastrado com sucesso!\n");
+    }
+    else if (strcmp(genero[posicao], "não declarar\n") == 0 || strcmp(genero[posicao], "nÃo declarar\n") == 0) //Se for não declarar...
+    {
+        strcpy(genero[posicao], "Não declarado.\n"); //Substitui a string pro "Não declarado.\n"
+        printf("Gênero cadastrado com sucesso!\n");
+    }
+    else //Se for inválido...
+    {
+        system("cls");
+        printf("O gênero deve ser Feminino, Masculino ou Não Declarar.\n");
+        printf("Informe o seu gênero: ");
+        fgets(genero[posicao], MAX_C, stdin);
+        verificaGenero(genero, posicao); //A função chama a si mesma (recursividade)
+    }
 }
 void verificaEmail(char email[MAX][MAX_C], int posicao)
 {
-    if (strchr(email[posicao], '@') == NULL)
+    if (strchr(email[posicao], '@') == NULL) //Checa se o '@' não existe na string
     {
         do
         {
@@ -121,14 +200,14 @@ void verificaEmail(char email[MAX][MAX_C], int posicao)
             printf("Informe o seu email: ");
             fgets(email[posicao], MAX_C, stdin);
         } while (strchr(email[posicao], '@') == NULL);
-        printf("Email cadastrado com sucesso.\n");
+        printf("Email cadastrado com sucesso!\n");
     }
     else
-        printf("Email cadastrado com sucesso.\n");
+        printf("Email cadastrado com sucesso!\n");
 }
 void verificaNome(char nome_completo[MAX][MAX_C], int posicao)
 {
-    if (strcmp(nome_completo[posicao], "") == 10)
+    if (strcmp(nome_completo[posicao], "\n") == 0) //Se o nome for vazio...
     {
         do
         {
@@ -136,7 +215,7 @@ void verificaNome(char nome_completo[MAX][MAX_C], int posicao)
             printf("O nome não pode ser nulo.\n");
             printf("Informe o seu nome completo: ");
             fgets(nome_completo[posicao], MAX_C, stdin);
-        } while (strcmp(nome_completo[posicao], "") == 10);
+        } while (strcmp(nome_completo[posicao], "\n") == 0);
         printf("Nome cadastrado com sucesso!\n");
     }
     else
@@ -163,4 +242,15 @@ void preencheId(int *id, int posicao)
         numero_randomico = (1 + rand() % MAX);
         id[posicao] = numero_randomico;
     }
+}
+void verificaLogin(char *login)
+{
+    do
+    {
+        if (strlen(login) <= 5)
+        {
+            printf("Insira um nome válido!\n");
+            fgets(login, MAX_C, stdin);
+        }
+    } while (strlen(login) <= 5);
 }
