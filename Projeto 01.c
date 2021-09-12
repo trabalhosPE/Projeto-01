@@ -131,9 +131,15 @@ void verificaVacina(bool *vacina, int posicao)
     for (int i = 0; i < strlen(aux); i++)
         aux[i] = tolower(aux[i]); //Deixa todas as letras em minúsculo
     if (strcmp(aux, "sim\n") == 0)
+    {
         vacina[posicao] = true; //Se sim a vacina é true
+        printf("Vacina cadastrada com sucesso!\n");
+    }
     else if (strcmp(aux, "não\n") == 0 || strcmp(aux, "nÃo\n") == 0)
+    {
         vacina[posicao] = false; //Se não a vacina é false
+        printf("Vacina cadastrada com sucesso!\n");
+    }
     else
     {
         if (strchr(aux, '\n') == NULL) //Por causa da forma como o fgets lê e da necessidade da função eu coloquei um "eliminador" de \n
