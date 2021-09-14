@@ -83,6 +83,7 @@ int main()
                 printf("Informe a sua altura: ");
                 scanf("%lf", &altura[usuario]);
                 verificaAltura(altura, usuario);
+                getchar();
                 //Vacina
                 printf("Você se vacinou? Escreva \"Sim\" ou \"Não\": ");
                 verificaVacina(vacina, usuario);
@@ -125,9 +126,9 @@ int main()
 
 void verificaVacina(bool *vacina, int posicao)
 {
-    getchar();
     char aux[4 + 2];
     fgets(aux, 4 + 2, stdin); //Lê uma string com sim ou não
+    fflush(stdin);
     for (int i = 0; i < strlen(aux); i++)
         aux[i] = tolower(aux[i]); //Deixa todas as letras em minúsculo
     if (strcmp(aux, "sim\n") == 0)
