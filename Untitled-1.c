@@ -5,7 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
-st
+
 #define MAX 1000     //MAX é número máximo de usuários que serão cadastrados.
 #define MAX_C 50 + 2 //MAX_C é número máximo de caracteres que cada variável char pode ler.
 
@@ -265,7 +265,7 @@ void verificaLogin(char *login)
         }
     } while (strlen(login) <= 5);
 }
-void editar(int id[], char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double altura[], char email[][MAX_C]){
+void editar(int id[] ,char nome_completo[][MAX_C] ,char genero[][MAX_C] ,char endereco[][MAX_C] ,double altura[] ,char email[][MAX_C] ,bool vacina[]){
 	int id_aux, i,menu; // função para a aba de edit
 	char aux;
 	do{
@@ -290,7 +290,9 @@ void editar(int id[], char nome_completo[][MAX_C], char genero[][MAX_C], char en
 							case 2:
 								break;
 							case 3:
-								altura[i] = verificaAltura(altura,i);
+								printf("Informe a sua altura: ");
+                                scanf("%lf", &altura[i]);
+                                verificaAltura(altura, i);
 								break;
 							case 4:
 								break;
