@@ -17,7 +17,8 @@ void verificaGenero(char genero[MAX][MAX_C], int posicao);      //Função que v
 void verificaAltura(double *altura, int posicao);               //Função que verifica se a altura é válida.
 void verificaVacina(bool *vacina, int posicao);                 //Função que verifica se o usuário é vacinado.
 void verificaLogin(char *login);
-int ValidaID(int idValido[]);
+bool ValidaID(int *id, int id_aux);
+int pegaPosicaoID(int *id, int id_aux);
 void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[][MAX_C], char email[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, bool *vacina, int usuario); //Função que cadastra um usuário.                                                                                                                          //teste ricardo - funçao validar o id
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina);                                        //Função que edita um usuário.
 void pesquisarCadastro(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], int usuario);
@@ -95,6 +96,10 @@ int main()
       break;
     case 8:
       restaurarCadastro(id, nome_completo, email, endereco, altura, genero, usuario, idbkp, nomebkp, emailbkp, generobkp, enderecobkp, back, alturabkp);
+      break;
+    default:
+      printf("Opção inválida.\n");
+      system("pause");
       break;
     }
   } while (menu != 9);
@@ -192,15 +197,15 @@ void verificaGenero(char genero[MAX][MAX_C], int posicao)
     genero[posicao][i] = tolower(genero[posicao][i]); //Deixa a string em minúsculo
   if (strcmp(genero[posicao], "masculino\n") == 0)    //Se for masculino...
   {
-    strcpy(genero[posicao], "Masculino.\n"); //Substitui a string pro "Masculino.\n"
+    strcpy(genero[posicao], "Masculino\n"); //Substitui a string pro "Masculino.\n"
   }
   else if (strcmp(genero[posicao], "feminino\n") == 0) //Se for feminino...
   {
-    strcpy(genero[posicao], "Feminino.\n"); //Substitui a string pro "Feminino.\n"
+    strcpy(genero[posicao], "Feminino\n"); //Substitui a string pro "Feminino.\n"
   }
   else if (strcmp(genero[posicao], "não declarar\n") == 0 || strcmp(genero[posicao], "nÃo declarar\n") == 0) //Se for não declarar...
   {
-    strcpy(genero[posicao], "Não declarado.\n"); //Substitui a string pro "Não declarado.\n"
+    strcpy(genero[posicao], "Não declarado\n"); //Substitui a string pro "Não declarado.\n"
   }
   else //Se for inválido...
   {
@@ -272,71 +277,91 @@ void verificaLogin(char *login)
 }
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina)
 {
-  int id_aux, i, menu; // função para a aba de edit
-  char aux;
-  do
+  int id_aux, i, menu_aux;
+  printf("Para editar, primeiro digite o seu ID: ");
+  scanf("%d", &id_aux);
+  getchar();
+  if (ValidaID(id, id_aux) == true)
   {
-    printf("Informe o ID para continuar: ");
-    scanf("%i", &id_aux);
-    fflush(stdin);
-    for (i = 0; i < MAX; i++)
+    int aux_posicao = pegaPosicaoID(id, id_aux);
+    do
     {
-      if (id[i] == id_aux)
+      system("cls");
+      printf("Dados cadastrados:\n");
+      printf("ID: %d \n", id[aux_posicao]);
+      printf("1 - Nome completo: %s", nome_completo[aux_posicao]);
+      printf("2 - Email: %s", email[aux_posicao]);
+      printf("3 - Gênero: %s", genero[aux_posicao]);
+      printf("4 - Endereço: %s", endereco[aux_posicao]);
+      printf("5 - Altura: %.2lf metros\n", altura[aux_posicao]);
+      ((vacina[aux_posicao] == true) ? (printf("6 - Vacinado(a): Sim\n")) : (printf("6 - Vacinado(a): Não\n")));
+      printf("7 - Sair\n");
+      printf("deseja mudar oq?\n");
+      scanf("%d", &menu_aux);
+      getchar();
+      switch (menu_aux)
       {
-        id[i] = ValidaID(id);
-        do
-        {
-
-          printf("Deseja editarUsuario o: \n");
-          printf("1. Nome: %s\n", nome_completo[i]);
-          printf("2. Sexo: %s\n", genero[i]);
-          printf("3. Endereço: %s\n", endereco[i]);
-          printf("4. Altura: %.2lf\n", altura[i]);
-          printf("5. Email: %s\n", email[i]);
-          scanf("%d", &menu);
-          switch (menu)
-          {
-          case 1:
-            break;
-          case 2:
-            break;
-          case 3:
-            printf("Informe a sua altura: ");
-            scanf("%lf", &altura[i]);
-            verificaAltura(altura, i);
-            break;
-          case 4:
-            break;
-          case 5:
-            break;
-          }
-          if (menu < 1 || menu > 5)
-          {
-            printf("Escolha algo para editarUsuario.");
-          }
-        } while (menu < 1 || menu > 5);
+      case 1:
+        printf("Informe o seu nome completo: ");
+        fgets(nome_completo[aux_posicao], MAX_C, stdin);
+        verificaNome(nome_completo, aux_posicao);
+        printf("Nome editado com sucesso!\n\n");
+        break;
+      case 2:
+        printf("Informe o seu email: ");
+        fgets(email[aux_posicao], MAX_C, stdin);
+        verificaEmail(email, aux_posicao);
+        printf("Email editado com sucesso!\n\n");
+        break;
+      case 3:
+        printf("Informe o seu gênero. Escreva \"Feminino\", \"Masculino\" ou \"Não Declarar\": ");
+        fgets(genero[aux_posicao], MAX_C, stdin);
+        verificaGenero(genero, aux_posicao);
+        printf("Gênero editado com sucesso!\n\n");
+        break;
+      case 4:
+        printf("Informe o seu endereço: ");
+        fgets(endereco[aux_posicao], MAX_C, stdin);
+        printf("Endereço editado com sucesso!\n\n");
+        break;
+      case 5:
+        printf("Informe a sua altura: ");
+        scanf("%lf", &altura[aux_posicao]);
+        verificaAltura(altura, aux_posicao);
+        getchar();
+        printf("Altura editada com sucesso.\n\n");
+        break;
+      case 6:
+        printf("Você se vacinou? Escreva \"Sim\" ou \"Não\": ");
+        verificaVacina(vacina, aux_posicao);
+        printf("Vacina editada com sucesso!\n\n");
+        break;
+      default:
+        printf("Opção inválida.\n");
+        system("pause");
+        break;
       }
-    }
-    printf("Deseja editarUsuario outro dado[S|N] ? ");
-    scanf("%c", &aux);
-    fflush(stdin);
-  } while (aux == 'S' || aux == 's');
+    } while (menu_aux != 7);
+  }
+  else
+    printf("O ID informado não existe.\n");
+  system("pause");
 }
-int ValidaID(int *idValido)
-{ // função que valida o ID se existe ou não. Falta trocar a validaçao para ID existente no vetor
-  int id;
-  do
-  {
-    printf("Digite o seu ID: \n");
-    scanf("%i", &id);
-    if (id < 1 || id > 1000)
-    {
-      printf("ID Invalido");
-    }
-  } while (id < 1 || id > 1000);
-  return id;
+bool ValidaID(int *id, int id_aux)
+{
+  int i = 0;
+  bool check;
+  while (id[++i] != 0)
+    ((id_aux == id[i - 1]) ? (check = true) : (check = false));
+  return check;
 }
-
+int pegaPosicaoID(int *id, int id_aux)
+{
+  int i = 0, aux;
+  for (int i = 0; id[i] == id_aux; i++)
+    aux = i;
+  return aux;
+}
 void pesquisarCadastro(int id[], char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double altura[], char genero[][MAX_C], int usuario)
 {
   int cadastroPesquisa, cadastroRetorno, i;
