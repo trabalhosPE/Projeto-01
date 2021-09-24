@@ -17,10 +17,11 @@ void verificaGenero(char genero[MAX][MAX_C], int posicao);      //Função que v
 void verificaAltura(double *altura, int posicao);               //Função que verifica se a altura é válida.
 void verificaVacina(bool *vacina, int posicao);                 //Função que verifica se o usuário é vacinado.
 void verificaLogin(char *login);
-bool ValidaID(int *id, int id_aux);
+bool verificaID(int *id, int id_aux);
 int pegaPosicaoID(int *id, int id_aux);
 void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[][MAX_C], char email[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, bool *vacina, int usuario); //Função que cadastra um usuário.                                                                                                                          //teste ricardo - funçao validar o id
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina);                                        //Função que edita um usuário.
+void excluiUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina);
 void pesquisarCadastro(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], int usuario);
 void pesquisarEmail(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], int usuario);
 void listaCadastro(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], int usuario);
@@ -75,12 +76,15 @@ int main()
     {
     case 1: //CADASTRO DE USUARIO
       cadastraUsuario(quantidade_usuario, id, nome_completo, email, genero, endereco, altura, vacina, usuario);
+      usuario++;
+      quantidade_usuario++;
       break;
     case 2:
       editarUsuario(id, nome_completo, genero, endereco, altura, email, vacina);
       break;
     case 3:
-      //fazer
+      excluiUsuario(id, nome_completo, genero, endereco, altura, email, vacina);
+      quantidade_usuario--;
       break;
     case 4:
       pesquisarCadastro(id, nome_completo, email, endereco, altura, genero, usuario); // pesquisar cadastro por id. obs:Arrumar a altura e vacina.
@@ -142,8 +146,6 @@ void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[MAX][MA
     printf("Você se vacinou? Escreva \"Sim\" ou \"Não\": ");
     verificaVacina(vacina, usuario);
     printf("Vacina cadastrada com sucesso!\n\n");
-    usuario++;
-    quantidade_usuario++;
   }
   else
   {
@@ -277,13 +279,13 @@ void verificaLogin(char *login)
 }
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina)
 {
-  int id_aux, i, menu_aux;
+  int id_aux, menu_aux, aux_posicao;
   printf("Para editar, primeiro digite o seu ID: ");
   scanf("%d", &id_aux);
   getchar();
-  if (ValidaID(id, id_aux) == true)
+  if (verificaID(id, id_aux) == true)
   {
-    int aux_posicao = pegaPosicaoID(id, id_aux);
+    aux_posicao = pegaPosicaoID(id, id_aux);
     do
     {
       system("cls");
@@ -296,7 +298,7 @@ void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], c
       printf("5 - Altura: %.2lf metros\n", altura[aux_posicao]);
       ((vacina[aux_posicao] == true) ? (printf("6 - Vacinado(a): Sim\n")) : (printf("6 - Vacinado(a): Não\n")));
       printf("7 - Sair\n");
-      printf("deseja mudar oq?\n");
+      printf("Escolha: ");
       scanf("%d", &menu_aux);
       getchar();
       switch (menu_aux)
@@ -347,20 +349,45 @@ void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], c
     printf("O ID informado não existe.\n");
   system("pause");
 }
-bool ValidaID(int *id, int id_aux)
+bool verificaID(int *id, int id_aux)
 {
-  int i = 0;
-  bool check;
+  int i = -1;
   while (id[++i] != 0)
-    ((id_aux == id[i - 1]) ? (check = true) : (check = false));
-  return check;
+    if (id_aux == id[i])
+      return true;
+  return false;
 }
 int pegaPosicaoID(int *id, int id_aux)
 {
-  int i = 0, aux;
-  for (int i = 0; id[i] == id_aux; i++)
-    aux = i;
-  return aux;
+  int i = 0;
+  while (id[i] != id_aux)
+    i++;
+  return i;
+}
+void excluiUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina)
+{
+  int id_aux, aux_posicao;
+  printf("Para excluir um cadastro informe o ID: ");
+  scanf("%d", &id_aux);
+  getchar();
+  if (verificaID(id, id_aux) == true)
+  {
+    aux_posicao = pegaPosicaoID(id, id_aux);
+    id[aux_posicao] = 0;
+    altura[aux_posicao] = 0;
+    vacina[aux_posicao] = false;
+    for (int i = 0; i < MAX_C; i++)
+    {
+      nome_completo[aux_posicao][i] = '\0';
+      email[aux_posicao][i] = '\0';
+      genero[aux_posicao][i] = '\0';
+      endereco[aux_posicao][i] = '\0';
+    }
+    printf("Usuário excluido com sucesso!\n");
+  }
+  else
+    printf("O ID informado não existe.\n");
+  system("pause");
 }
 void pesquisarCadastro(int id[], char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double altura[], char genero[][MAX_C], int usuario)
 {
@@ -387,7 +414,6 @@ void pesquisarCadastro(int id[], char nome_completo[][MAX_C], char email[][MAX_C
     scanf("%c", &continua);
   } while (continua == 'S' || continua == 's');
 }
-
 void pesquisarEmail(int id[], char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double altura[], char genero[][MAX_C], int usuario)
 {
   int cadastroRetorno = 0, i;
