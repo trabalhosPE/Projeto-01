@@ -18,6 +18,7 @@
 //Índice das funções:
 
 //Funções do menu principal:
+void configInicial(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], bool *vacina, int *id_backup, char nome_backup[][MAX_C], char email_backup[][MAX_C], char genero_backup[][MAX_C], char endereco_backup[][MAX_C], double *altura_backup, bool *vacina_backup);                             //Função que atribui valores iniciais para as variáveis.
 void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[][MAX_C], char email[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, bool *vacina, int usuario);                                                                                                                                                                     //Função que cadastra um usuário.
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina);                                                                                                                                                                                                            //Função que edita um usuário.
 void excluiUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina);                                                                                                                                                                                                            //Função que exclui um usuário.
@@ -71,6 +72,9 @@ int main()
   char login[MAX_C];
   char senha[MAX_C];
 
+  //Atribuição de valores iniciais para as variáveis:
+  configInicial(id, nome_completo, email, endereco, altura, genero, vacina, id_backup, nome_backup, email_backup, genero_backup, endereco_backup, altura_backup, vacina_backup);
+
   //Criação de conta:
   printf("Olá, seja bem-vindo ao cadastro online da Universidade Católica de Brasília.\n");
   printf("Crie sua conta...\n");
@@ -95,12 +99,11 @@ int main()
     scanf("%d", &menu);
     system("cls");
     getchar();
-
+    usuario = pegaPosicaoID(id, 0);
     switch (menu)
     {
     case 1: //Cadastro de usuário.
       cadastraUsuario(quantidade_usuario, id, nome_completo, email, genero, endereco, altura, vacina, usuario);
-      usuario++;
       quantidade_usuario++;
       break;
     case 2: //Edição de usuário.
@@ -122,7 +125,7 @@ int main()
     case 7: //Backup dos cadastros.
       backupCadastro(id, nome_completo, email, endereco, altura, genero, vacina, quantidade_usuario, id_backup, nome_backup, email_backup, genero_backup, endereco_backup, altura_backup, vacina_backup);
       break;
-    case 8: // Restauração dos cadastros.
+    case 8: //Restauração dos cadastros.
       restaurarCadastro(id, nome_completo, email, endereco, altura, genero, vacina, quantidade_usuario, id_backup, nome_backup, email_backup, genero_backup, endereco_backup, altura_backup, vacina_backup);
       break;
     default:
@@ -135,39 +138,55 @@ int main()
 //Fim do algoritmo principal.
 
 //Funções:
+void configInicial(int *id, char nome_completo[][MAX_C], char email[][MAX_C], char endereco[][MAX_C], double *altura, char genero[][MAX_C], bool *vacina, int *id_backup, char nome_backup[][MAX_C], char email_backup[][MAX_C], char genero_backup[][MAX_C], char endereco_backup[][MAX_C], double *altura_backup, bool *vacina_backup)
+{
+  for (int i = 0; i < MAX; i++)
+  {
+    id[i] = 0;
+    id_backup[i] = 0;
+    altura[i] = 0;
+    altura_backup[i] = 0;
+    vacina[i] = false;
+    vacina_backup[i] = false;
+    for (int j = 0; j < MAX_C; j++)
+    {
+      nome_completo[i][j] = '\0';
+      nome_backup[i][j] = '\0';
+      email[i][j] = '\0';
+      email_backup[i][j] = '\0';
+      genero[i][j] = '\0';
+      genero_backup[i][j] = '\0';
+      endereco[i][j] = '\0';
+      endereco_backup[i][j] = '\0';
+    }
+  }
+}
 void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[][MAX_C], char email[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, bool *vacina, int usuario)
 {
   if (quantidade_usuario < MAX)
   {
-    //ID:
     preencheId(id, usuario);
     printf("O seu ID é \"%d\".\n\n", id[usuario]);
-    //Nome completo:
     printf("Informe o seu nome completo: ");
     fgets(nome_completo[usuario], MAX_C, stdin);
     verificaNome(nome_completo, usuario);
     printf("Nome cadastrado com sucesso!\n\n");
-    //Email:
     printf("Informe o seu email: ");
     fgets(email[usuario], MAX_C, stdin);
     verificaEmail(email, usuario);
     printf("Email cadastrado com sucesso!\n\n");
-    //Gênero:
     printf("Informe o seu gênero. [\"Feminino\", \"Masculino\" ou \"Não Declarar\"]: ");
     fgets(genero[usuario], MAX_C, stdin);
     verificaGenero(genero, usuario);
     printf("Gênero cadastrado com sucesso!\n\n");
-    //Endereço:
     printf("Informe o seu endereço: ");
     fgets(endereco[usuario], MAX_C, stdin);
     printf("Endereço cadastrado com sucesso!\n\n");
-    //Altura:
     printf("Informe a sua altura: ");
     scanf("%lf", &altura[usuario]);
     verificaAltura(altura, usuario);
     getchar();
     printf("Altura cadastrada com sucesso.\n\n");
-    //Vacinação:
     printf("Você se vacinou? Escreva \"Sim\" ou \"Não\": ");
     verificaVacina(vacina, usuario);
     printf("Vacina cadastrada com sucesso!\n\n");
@@ -182,7 +201,7 @@ void cadastraUsuario(int quantidade_usuario, int *id, char nome_completo[][MAX_C
 void editarUsuario(int *id, char nome_completo[][MAX_C], char genero[][MAX_C], char endereco[][MAX_C], double *altura, char email[][MAX_C], bool *vacina)
 {
   int id_aux, menu_aux, aux_posicao;
-  printf("Para editar, primeiro digite o seu ID: ");
+  printf("Para editar, primeiro informe o seu ID: ");
   scanf("%d", &id_aux);
   getchar();
   if (verificaID(id, id_aux) == true)
@@ -412,7 +431,7 @@ void verificaNome(char nome_completo[][MAX_C], int posicao)
 }
 void verificaEmail(char email[][MAX_C], int posicao)
 {
-  if (strchr(email[posicao], '@') == NULL) //Checa se o '@' não existe na string
+  if (strchr(email[posicao], '@') == NULL)
     do
     {
       system("cls");
@@ -437,7 +456,7 @@ void verificaGenero(char genero[][MAX_C], int posicao)
     printf("O gênero deve ser Feminino, Masculino ou Não Declarar.\n");
     printf("Informe o seu gênero: ");
     fgets(genero[posicao], MAX_C, stdin);
-    verificaGenero(genero, posicao); //A função chama a si mesma (recursividade)
+    verificaGenero(genero, posicao);
   }
 }
 void verificaAltura(double *altura, int posicao)
@@ -455,7 +474,6 @@ void verificaVacina(bool *vacina, int posicao)
 {
   char aux[4 + 2];
   fgets(aux, 4 + 2, stdin);
-  fflush(stdin);
   for (int i = 0; i < strlen(aux); i++)
     aux[i] = tolower(aux[i]);
   if (strcmp(aux, "sim\n") == 0)
@@ -464,13 +482,13 @@ void verificaVacina(bool *vacina, int posicao)
     vacina[posicao] = false;
   else
   {
-    if (strchr(aux, '\n') == NULL) //Por causa da forma como o fgets lê e da necessidade da função eu coloquei um "eliminador" de \n
+    if (strchr(aux, '\n') == NULL)
       while (getchar() != '\n')
         ;
     system("cls");
     printf("Você deve escrever apenas \"Sim\" ou \"Não\".\n");
     printf("Você se vacinou? ");
-    verificaVacina(vacina, posicao); //A função chama a si mesma (recursividade)
+    verificaVacina(vacina, posicao);
   }
 }
 bool verificaID(int *id, int id_aux)
@@ -484,35 +502,19 @@ void criacaoConta(char *login, char *senha)
 {
   system("pause");
   system("cls");
-  //Criação do login:
   printf("Crie o seu login: ");
   fgets(login, MAX_C, stdin);
-
-  //Criação da senha:
   printf("Crie a sua senha: ");
   fgets(senha, MAX_C, stdin);
 }
 void preencheId(int *id, int posicao)
 {
   int numero_randomico;
-  bool aux;
-  if (posicao > 0) //Caso não seja a primeira vez que a função é chamada.
-  {
-    do //Loop do-while da um valor para numero_randomico e verifica se ele existe no vetor id.
-    {
-      aux = false;
-      numero_randomico = (1 + rand() % MAX);
-      for (int i = 0; i < posicao; i++) //O loop for percorre o vetor id e verifica se o numero_randomico já existe no vetor.
-        if (numero_randomico == id[i])
-          aux = true;
-    } while (aux == true); //Caso o numero_randomico não exista no vetor ele é escrito na primeira posição disponível.
-    id[posicao] = numero_randomico;
-  }
-  else //Caso seja a primeira vez que a função é chamada, ela simplesmente recebe um número aleatório.
+  do
   {
     numero_randomico = (1 + rand() % MAX);
-    id[posicao] = numero_randomico;
-  }
+  } while (verificaID(id, numero_randomico) == true);
+  id[posicao] = numero_randomico;
 }
 int pegaPosicaoID(int *id, int id_aux)
 {
